@@ -1,0 +1,61 @@
+{
+  "project": {
+    "name": "assoc_age_demo",
+    "version": "0.1.0"
+  },
+  "io": {
+    "input": "data/sample.csv",
+    "out_root": "outputs/assoc_job",
+    "overwrite": true,
+    "save_data": true,
+    "save_tables": true,
+    "save_plots": true,
+    "plot_formats": ["png"]
+  },
+  "columns": {
+    "site": "Site",
+    "group": "auto",
+    "age": "Age",
+    "sex": "Sex",
+    "icv": "ICV"
+  },
+  "roi": {
+    "regex": "^(L_|R_)",
+    "drop_suffix": "_thickavg"
+  },
+  "pipeline": [
+    { "step": "prep", "params": { "na_action": "drop_required", "outlier_action": "none" } },
+    { "step": "combat", "params": { "missing_fit": "impute", "single_batch": "error" } },
+    {
+      "step": "assoc_scan",
+      "params": {
+        "x": "Age",
+        "covariates": ["Sex"],
+        "model_engine": "lm",
+        "diagnostics": "light",
+        "p_adjust_method": "fdr",
+        "family_id": "ct_age_assoc",
+        "family_desc": "CT ~ Age + Sex"
+      }
+    },
+    {
+      "step": "plots",
+      "params": {
+        "enabled": ["pvalue_hist", "top_rois", "scatter_assoc"],
+        "theme": "minimal",
+        "top_metric": "estimate",
+        "top_label": "y_var",
+        "scatter_assoc": {
+          "roi": "L_superiorfrontal_thickavg",
+          "x": "Age",
+          "value": "marginal",
+          "covariates": ["Sex"],
+          "color": "Sex",
+          "plot_spec": { "theme": "minimal" }
+        }
+      }
+    },
+    { "step": "export", "params": { "formats": ["csv"] } }
+  ],
+  "manifest": { "enabled": true, "path": "logs/run_manifest.json" }
+}

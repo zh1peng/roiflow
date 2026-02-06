@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^functions2refactor$
+^\.git$
+^\.gitignore$
+^outputs$
+^scripts$
+^data$
+^LICENSE\.md$

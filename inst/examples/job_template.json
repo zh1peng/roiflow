@@ -1,0 +1,112 @@
+{
+  "project": {
+    "name": "two_group_demo",
+    "version": null
+  },
+  "io": {
+    "input": "data/sample.csv",
+    "out_root": "outputs/job_run",
+    "overwrite": false,
+    "save_data": true,
+    "save_tables": true,
+    "save_plots": true,
+    "plot_formats": ["png"]
+  },
+  "columns": {
+    "site": "Site",
+    "group": "auto",
+    "age": "Age",
+    "sex": "Sex",
+    "icv": "ICV"
+  },
+  "roi": {
+    "regex": "^(L_|R_)",
+    "drop_suffix": "_thickavg",
+    "cols": null
+  },
+  "pipeline": [
+    {
+      "step": "prep",
+      "params": {
+        "group_ref": "Control",
+        "sex_ref": "0",
+        "factor_levels": null,
+        "na_action": "drop_required",
+        "outlier_action": "none",
+        "verbose": false
+      }
+    },
+    {
+      "step": "combat",
+      "params": {
+        "covariates": ["Age", "Sex", "ICV"],
+        "missing_fit": "impute",
+        "single_batch": "error",
+        "verbose": true
+      }
+    },
+    {
+      "step": "compare_groups",
+      "params": {
+        "covariates": ["Age", "Sex", "ICV"],
+        "ref": "Control",
+        "target": "Case",
+        "model_engine": "lm",
+        "diagnostics": "light",
+        "effect_size": "hedges_g_pooled",
+        "effect_size_ci": "wald",
+        "effect_size_from": "raw_data",
+        "p_adjust_method": "fdr",
+        "family_id": "ct_group_diff",
+        "family_desc": "CT case-control"
+      }
+    },
+    {
+      "step": "plots",
+      "params": {
+        "enabled": ["brain_map", "pvalue_hist"],
+        "atlas": "dk",
+        "brain_layout": "dispersed",
+        "stat_col": "es_value",
+        "p_type": "p_adj",
+        "p_max": null,
+        "p_col": "p_adj",
+        "title": "Brain Map (Effect Size)",
+        "legend_title": null,
+        "na_color": "grey90",
+        "ggseg_theme": "brain2",
+        "theme": "minimal",
+        "raincloud_roi": {
+          "roi": "L_superiorfrontal_thickavg",
+          "value": "marginal",
+          "covariates": ["Age", "Sex", "ICV"],
+          "group_col": null,
+          "orientation": "vertical",
+          "style": "half_violin",
+          "pairwise": null,
+          "plot_spec": { "theme": "minimal", "legend_position": "none" }
+        },
+        "scatter_assoc": {
+          "roi": "L_superiorfrontal_thickavg",
+          "x": "Age",
+          "value": "marginal",
+          "covariates": ["Sex"],
+          "color": "Sex",
+          "plot_spec": { "theme": "minimal" }
+        }
+      }
+    },
+    {
+      "step": "export",
+      "params": {
+        "base_name": "ct_group_diff",
+        "formats": ["csv"],
+        "style": "publication"
+      }
+    }
+  ],
+  "manifest": {
+    "enabled": true,
+    "path": "logs/run_manifest.json"
+  }
+}

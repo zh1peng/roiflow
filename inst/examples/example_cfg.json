@@ -1,0 +1,73 @@
+{
+  "project": {
+    "name": "two_group_demo",
+    "version": "0.1.0"
+  },
+  "io": {
+    "input": "data/sample.csv",
+    "out_root": "outputs/two_group_com",
+    "overwrite": true,
+    "save_data": true,
+    "save_tables": true,
+    "save_plots": true,
+    "plot_formats": ["png"]
+  },
+  "columns": {
+    "site": "Site",
+    "group": "auto",
+    "age": "Age",
+    "sex": "Sex",
+    "icv": "ICV"
+  },
+  "roi": {
+    "regex": "^(L_|R_)",
+    "drop_suffix": "_thickavg"
+  },
+  "pipeline": [
+    { "step": "prep", "params": { "na_action": "drop_required", "outlier_action": "none" } },
+    { "step": "combat", "params": { "missing_fit": "impute", "single_batch": "error" } },
+    {
+      "step": "compare_groups",
+      "params": {
+        "model_engine": "lm",
+        "diagnostics": "light",
+        "effect_size": "hedges_g_pooled",
+        "effect_size_ci": "wald",
+        "p_adjust_method": "fdr",
+        "ref": "Control",
+        "target": "Case",
+        "family_id": "ct_group_diff",
+        "family_desc": "CT case-control"
+      }
+    },
+    {
+      "step": "plots",
+      "params": {
+        "enabled": ["brain_map", "pvalue_hist"],
+        "atlas": "dk",
+        "stat_col": "es_value",
+        "p_type": "p_adj",
+        "p_max": null,
+        "brain_layout": "dispersed",
+        "brain_view": null,
+        "theme": "minimal",
+        "raincloud_roi": {
+          "roi": "L_superiorfrontal_thickavg",
+          "value": "marginal",
+          "covariates": ["Age", "Sex", "ICV"],
+          "group_col": null,
+          "plot_spec": { "theme": "minimal", "legend_position": "none" }
+        }
+      }
+    },
+    {
+      "step": "export",
+      "params": {
+        "base_name": "ct_group_diff",
+        "formats": ["csv"],
+        "style": "publication"
+      }
+    }
+  ],
+  "manifest": { "enabled": true, "path": "logs/run_manifest.json" }
+}
