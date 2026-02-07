@@ -5,5 +5,5 @@
 ^\.gitignore$
 ^outputs$
 ^scripts$
-^data$
+^data/sample\.csv$
 ^LICENSE\.md$
