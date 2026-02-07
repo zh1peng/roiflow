@@ -1,5 +1,6 @@
 /data/*
+!/data/*.rda
+/data/sample.csv
 /outputs/*
-data/
 outputs/
 scripts/

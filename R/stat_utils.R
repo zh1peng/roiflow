@@ -2,6 +2,10 @@
 
 `%||%` <- function(x, y) if (is.null(x) || length(x) == 0) y else x
 
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("brain", "pet", "pet_map", ".metric", ".sig", "value"))
+}
+
 .log_add <- function(log, code, message, context = list()) {
   log[[length(log) + 1]] <- list(code = code, message = message, context = context)
   log

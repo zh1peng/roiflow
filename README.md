@@ -209,6 +209,38 @@ handled by demos or the pipeline export helpers).
 | `plot_raincloud_roi()` | ROI distribution (2+ groups; raw or marginal; optional pairwise markers) | `data`, `roi`, `group_col` |
 | `plot_scatter_assoc()` | ROI vs predictor scatter (raw or marginal) | `data`, `roi`, `x` |
 
+## PET Spin-Correlation Utilities
+
+`roiflow` also includes PET DK-68 maps and spin-test helpers:
+
+- `pet_available()` to list packaged PET targets + metadata
+- `pet_corr()` to correlate 1..N brain maps vs 1..N PET maps with `p_spin`
+- `pet_plot_scatter()`, `pet_plot_bar()`, `pet_plot_radar()` for publication-ready figures
+
+Quick example:
+
+```r
+data("pet_maps_dk68")
+
+# Example brain maps (replace with your own DK-68 ROI vectors/matrix)
+brain <- pet_maps_dk68[, c("D1", "DAT")]
+
+# Fast demo permutation matrix (use larger n_perm for analysis)
+perm_id <- replicate(100, sample.int(nrow(brain)), simplify = "matrix")
+
+res <- pet_corr(
+  brain = brain,
+  pet_select = c("D1", "D2", "DAT", "MOR"),
+  perm_id = perm_id,
+  n_perm = 100
+)
+
+head(res$results)
+pet_plot_scatter(res, brain_map = "D1", pet_map = "D1")
+pet_plot_bar(res, style = "bar")
+pet_plot_radar(res, metric = "r_obs")
+```
+
 ## Main Functions
 
 ### `prep()`
