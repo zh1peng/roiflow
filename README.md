@@ -10,8 +10,11 @@ An R package providing a comprehensive, configurable workflow for preprocessing,
 # Install from local source
 devtools::install_local("path/to/roiflow")
 
-# Or install development version from GitHub (once published)
-# devtools::install_github("username/roiflow")
+# Or install from GitHub (replace with your repo path)
+# devtools::install_github("<github-owner>/roiflow")
+
+# During local development (from project root)
+devtools::load_all(".")
 ```
 
 ## Features
@@ -188,6 +191,28 @@ The pipeline uses package-level utilities (not ad-hoc demo code):
 
 - `format_results_table(res_tbl, style = c("minimal","publication"), ...)`
 - `export_results_tables(res_tbl, out_dir, base_name = "...", ...)`
+
+## Skills Usage (LLM)
+
+This repository includes two LLM skills under `skills/`:
+
+- `skills/roiflow-orchestrator`: config-first pipeline jobs (`run_pipeline`)
+- `skills/roiflow-pet-correlation`: PET correlation and PET plotting workflows
+
+Recommended setup:
+
+1. Ensure `Rscript` is available on PATH.
+2. Ensure `roiflow` is available in the same R environment used by the agent:
+   - `devtools::install_local("path/to/roiflow")`, or
+   - `devtools::install_github("<github-owner>/roiflow")`, or
+   - `devtools::load_all(".")` from this project root.
+3. Register/copy this repo's `skills/` folder in your client skill path (for example `$CODEX_HOME/skills` if your client uses it).
+
+Typical orchestration flow with `roiflow-orchestrator`:
+
+1. Start from `inst/examples/job_template.json`.
+2. Edit `io`, `columns`, `roi`, and `pipeline` params.
+3. Run `run_pipeline("path/to/job.json")`.
 
 ## Plotting Utilities
 
@@ -394,9 +419,10 @@ MIT License - see LICENSE file for details.
 If you use this package in your research, please cite:
 
 ```
-[Citation information to be added]
+Cao Z (2026). roiflow: Workflow for ROI-Based Neuroimaging Data Analysis. R package version 0.1.0.
 ```
 
 ## Contact
 
-[Contact information to be added]
+Zhipeng Cao  
+Email: zhipeng30@foxmail.com

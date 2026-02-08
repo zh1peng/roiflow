@@ -1,0 +1,4 @@
+interface:
+  display_name: "roiflow Orchestrator"
+  short_description: "Run roiflow config jobs with strict validation contracts."
+  default_prompt: "Use $roiflow-orchestrator to build, validate, and run a roiflow JSON job with deterministic outputs."

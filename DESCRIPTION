@@ -2,9 +2,9 @@ Package: roiflow
 Type: Package
 Title: Workflow for ROI-Based Neuroimaging Data Analysis
 Version: 0.1.0
-Authors@R: person("Your", "Name", email = "your.email@example.com", role = c("aut", "cre"))
-Author: Your Name [aut, cre]
-Maintainer: Your Name <your.email@example.com>
+Authors@R: person("Zhipeng", "Cao", email = "zhipeng30@foxmail.com", role = c("aut", "cre"))
+Author: Zhipeng Cao [aut, cre]
+Maintainer: Zhipeng Cao <zhipeng30@foxmail.com>
 Depends: R (>= 3.5.0)
 Description: A comprehensive workflow for preprocessing, analyzing, and clustering
     ROI-based neuroimaging data. Includes functions for data preparation, outlier

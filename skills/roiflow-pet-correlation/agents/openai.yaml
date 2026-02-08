@@ -1,0 +1,4 @@
+interface:
+  display_name: "roiflow PET Correlation"
+  short_description: "Run roiflow PET correlation and plots with strict checks."
+  default_prompt: "Use $roiflow-pet-correlation to run pet_corr with explicit map selection and deterministic validation."
