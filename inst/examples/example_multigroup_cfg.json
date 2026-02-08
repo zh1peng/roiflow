@@ -1,0 +1,63 @@
+{
+  "project": {
+    "name": "multigroup_pairwise_demo",
+    "version": "0.1.0"
+  },
+  "io": {
+    "input": "data/sample.csv",
+    "out_root": "outputs/multiple_group_agent",
+    "overwrite": true,
+    "save_data": true,
+    "save_tables": true,
+    "save_plots": true,
+    "plot_formats": ["png"]
+  },
+  "columns": {
+    "site": "Site",
+    "group": "auto",
+    "age": "Age",
+    "sex": "Sex",
+    "icv": "ICV"
+  },
+  "roi": {
+    "regex": "^(L_|R_)",
+    "drop_suffix": "_thickavg"
+  },
+  "pipeline": [
+    { "step": "prep", "params": { "na_action": "drop_required", "outlier_action": "none" } },
+    { "step": "combat", "params": { "missing_fit": "impute", "single_batch": "error" } },
+    {
+      "step": "pairwise_groups",
+      "params": {
+        "covariates": ["Age", "Sex", "ICV"],
+        "model_engine": "lm",
+        "diagnostics": "light",
+        "effect_size": "hedges_g_pooled",
+        "effect_size_ci": "wald",
+        "p_adjust_method": "fdr",
+        "family_id": "ct_pairwise",
+        "family_desc": "CT pairwise group comparisons"
+      }
+    },
+    {
+      "step": "plots",
+      "params": {
+        "enabled": ["pvalue_hist", "top_rois"],
+        "theme": "minimal",
+        "p_col": "p_adj",
+        "top_metric": "es_value",
+        "top_label": "var",
+        "top_n": 20
+      }
+    },
+    {
+      "step": "export",
+      "params": {
+        "base_name": "ct_pairwise_groups",
+        "formats": ["csv"],
+        "style": "publication"
+      }
+    }
+  ],
+  "manifest": { "enabled": true, "path": "logs/run_manifest.json" }
+}
